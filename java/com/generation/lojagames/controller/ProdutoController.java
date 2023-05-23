@@ -1,4 +1,4 @@
-package com.generation.blogpessoal.controller;
+package com.generation.lojagames.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,55 +16,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import com.generation.blogpessoal.model.Postagem;
-import com.generation.blogpessoal.repository.PostagemRepository;
-import com.generation.blogpessoal.repository.TemaRepository;
-
+import com.generation.lojagames.model.Produto;
+import com.generation.lojagames.repository.ProdutoRepository;
+import com.generation.lojagames.repository.CategoriaRepository;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/postagens")
+@RequestMapping("/produtos")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class PostagemController {
+public class ProdutoController {
 	
 	@Autowired
-	private PostagemRepository postagemRepository;
+	private ProdutoRepository produtoRepository;
 	
 	@Autowired
-	private TemaRepository temaRepository;
+	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
-	public ResponseEntity <List<Postagem>> getAll(){
-		return ResponseEntity.ok(postagemRepository.findAll());
+	public ResponseEntity <List<Produto>> getAll(){
+		return ResponseEntity.ok(produtoRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Postagem> getById(@PathVariable Long id){
-		return postagemRepository.findById(id)
+	public ResponseEntity<Produto> getById(@PathVariable Long id){
+		return produtoRepository.findById(id)
 				.map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
 	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
-		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
+	public ResponseEntity<List<Produto>> getByTitulo(@PathVariable String titulo){
+		return ResponseEntity.ok(produtoRepository.findAllByTituloContainingIgnoreCase(titulo));
 	}
 	
 	@PostMapping
-	public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
-		if(temaRepository.existsById(postagem.getTema().getId()))
+	public ResponseEntity<Produto> post(@Valid @RequestBody Produto produto){
+		if(categoriaRepository.existsById(produto.getCategoria().getId()))
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(postagemRepository.save(postagem));		
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tema não existe",null);
+				.body(produtoRepository.save(produto));		
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Categoria não existe",null);
 	}
 	
 	@PutMapping
-	public ResponseEntity <Postagem> put(@Valid @RequestBody Postagem postagem){
-		if(postagemRepository.existsById(postagem.getId())) {		
-			if(temaRepository.existsById(postagem.getTema().getId()))
+	public ResponseEntity <Produto> put(@Valid @RequestBody Produto produto){
+		if(produtoRepository.existsById(produto.getId())) {		
+			if(categoriaRepository.existsById(produto.getCategoria().getId()))
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(postagemRepository.save(postagem));
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tema não existe",null);
+				.body(produtoRepository.save(produto));
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Categoria não existe",null);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
@@ -72,10 +71,10 @@ public class PostagemController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable Long id) {
-		Optional<Postagem> postagem = postagemRepository.findById(id);
+		Optional<Produto> produto = produtoRepository.findById(id);
 		
-		if(postagem.isEmpty())
+		if(produto.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		postagemRepository.deleteById(id);
+		produtoRepository.deleteById(id);
 	}
 }
