@@ -1,4 +1,4 @@
-package com.generation.blogpessoal.model;
+package com.generation.lojagames.model;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,8 +13,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "tb_postagens")
-public class Postagem {
+@Table(name = "tb_produtos")
+public class Produto {
 
 	@Id //indica que este atributo será uma chave primária na minha tabela
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //indica que a chave primária será gerada junto com um auto-increment
@@ -32,15 +32,15 @@ public class Postagem {
 	private LocalDateTime data;
 	
 	@ManyToOne
-	@JsonIgnoreProperties("postagem")
-	private Tema tema;
+	@JsonIgnoreProperties("produto")
+	private Categoria categoria;
 	
-	public Tema getTema() {
-		return tema;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setTema(Tema tema) {
-		this.tema = tema;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	public Long getId() {
