@@ -1,4 +1,4 @@
-package com.generation.lojagames.model;
+package com.generation.LojaGames.model;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.UpdateTimestamp;
